@@ -1,0 +1,17 @@
+{
+    "langNames": {
+        "es": "Español",
+        "en": "Inglés"
+    },
+    "today": "Hoy",
+    "cities": {
+        "london": "Londres",
+        "toronto": "Toronto",
+        "singapore": "Singapur"
+    },
+    "info": {
+        "time": "Selecciona la hora para ver mas información",
+        "day": "Selecciona el día para ver mas información"
+    },
+    "error": "Algo salió mal, por favor inténtalo de nuevo"
+}
