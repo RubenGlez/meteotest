@@ -14,39 +14,46 @@ import i18n, {
 import Tabs from "../../components/organisms/Tabs";
 import WeatherForecast from "../../components/organisms/WeatherForecast";
 import { AVAILABLE_CITIES } from "./types";
+import { useMemo } from "react";
 
 export default function MeteoTest() {
   const forecastRepository = createAPIForecastRepository();
   const { t } = useTranslation();
 
-  const tabs = [
-    {
-      id: AVAILABLE_CITIES.london,
-      title: t("cities.london"),
-      content: <WeatherForecast city={AVAILABLE_CITIES.london} />,
-    },
-    {
-      id: AVAILABLE_CITIES.toronto,
-      title: t("cities.toronto"),
-      content: <WeatherForecast city={AVAILABLE_CITIES.toronto} />,
-    },
-    {
-      id: AVAILABLE_CITIES.singapore,
-      title: t("cities.singapore"),
-      content: <WeatherForecast city={AVAILABLE_CITIES.singapore} />,
-    },
-  ];
+  const tabs = useMemo(
+    () => [
+      {
+        id: AVAILABLE_CITIES.london,
+        title: t("cities.london"),
+        content: <WeatherForecast city={AVAILABLE_CITIES.london} />,
+      },
+      {
+        id: AVAILABLE_CITIES.toronto,
+        title: t("cities.toronto"),
+        content: <WeatherForecast city={AVAILABLE_CITIES.toronto} />,
+      },
+      {
+        id: AVAILABLE_CITIES.singapore,
+        title: t("cities.singapore"),
+        content: <WeatherForecast city={AVAILABLE_CITIES.singapore} />,
+      },
+    ],
+    [t]
+  );
 
-  const languages = [
-    {
-      label: t("langNames.es"),
-      value: AVAILABLE_LANGUAGES.es,
-    },
-    {
-      label: t("langNames.en"),
-      value: AVAILABLE_LANGUAGES.en,
-    },
-  ];
+  const languages = useMemo(
+    () => [
+      {
+        label: t("langNames.es"),
+        value: AVAILABLE_LANGUAGES.es,
+      },
+      {
+        label: t("langNames.en"),
+        value: AVAILABLE_LANGUAGES.en,
+      },
+    ],
+    [t]
+  );
 
   return (
     <MeteoTestContainer>

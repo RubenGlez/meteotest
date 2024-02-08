@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ForecastContext } from "../../contexts/ForecastContext";
 import {
   ForecastGetParams,
@@ -9,7 +9,7 @@ import {
   Forecast,
   HourlyForecast,
 } from "../../core/domain/Forecast";
-import { getForecast } from "../../core/application/getForecast";
+import { getForecastUseCase } from "../../core/application/getForecastUseCase";
 import { useTranslation } from "react-i18next";
 
 export default function ForecastProvider({
@@ -22,14 +22,19 @@ export default function ForecastProvider({
   const [selectedHour, setSelectedHour] = useState<HourlyForecast>();
   const [error, setError] = useState<string>();
 
-  async function getWeatherForecast(params: ForecastGetParams) {
-    try {
-      const fc = await getForecast(repository, params);
-      setForecast(fc);
-    } catch (e) {
-      setError(t("error"));
-    }
-  }
+  const forecastService = getForecastUseCase(repository);
+
+  const getWeatherForecast = useCallback(
+    async (params: ForecastGetParams) => {
+      try {
+        const fc = await forecastService(params);
+        setForecast(fc);
+      } catch (e) {
+        setError(t("error"));
+      }
+    },
+    [forecastService, t]
+  );
 
   function handleSelectDay(day: DailyForecast) {
     setSelectedDay(day);
@@ -55,21 +60,36 @@ export default function ForecastProvider({
     }
   }, [selectedDay]);
 
-  const value = {
-    getForecast: getWeatherForecast,
-    handleSelectDay,
-    handleSelectHour,
-    days: forecast,
-    hours: selectedDay?.hourlyForecast,
-    selectedDayTimestamp: selectedDay?.timestamp,
-    selectedHourTimestamp: selectedHour?.timestamp,
-    currentTemperature: selectedHour?.temperature,
-    currentDescription: selectedHour?.description,
-    currentMaxTemperature: selectedHour?.maxTemperature,
-    currentMinTemperature: selectedHour?.minTemperature,
-    currentIcon: selectedHour?.icon,
-    error,
-  };
+  const value = useMemo(
+    () => ({
+      getForecast: getWeatherForecast,
+      handleSelectDay,
+      handleSelectHour,
+      days: forecast,
+      hours: selectedDay?.hourlyForecast,
+      selectedDayTimestamp: selectedDay?.timestamp,
+      selectedHourTimestamp: selectedHour?.timestamp,
+      currentTemperature: selectedHour?.temperature,
+      currentDescription: selectedHour?.description,
+      currentMaxTemperature: selectedHour?.maxTemperature,
+      currentMinTemperature: selectedHour?.minTemperature,
+      currentIcon: selectedHour?.icon,
+      error,
+    }),
+    [
+      error,
+      forecast,
+      getWeatherForecast,
+      selectedDay?.hourlyForecast,
+      selectedDay?.timestamp,
+      selectedHour?.description,
+      selectedHour?.icon,
+      selectedHour?.maxTemperature,
+      selectedHour?.minTemperature,
+      selectedHour?.temperature,
+      selectedHour?.timestamp,
+    ]
+  );
 
   return (
     <ForecastContext.Provider value={value}>
