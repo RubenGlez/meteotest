@@ -1,48 +1,50 @@
 # Meteotest
 
-## Introducción
+Please note that this repository was created as part of a selection process and should not be considered a final product.
 
-Meteotest es una SPA que muestra las predicciones meteorológicas para tres ciudades específicas (Londres, Toronto y Singapur).
-La interfaz consta de una cabecera con el título de la app y un selector de idiomas (Inglés y Español) y un widget con formato de pestañas.
-Cada una de las pestañas hace referencia a una de las ciudades. Para cada una de las pestañas se muestra una sección con dos bandas:
+## Introduction
 
-- Banda superior: Conta de dos secciones:
-  - Predicción actual: Muestra el detalle de la predicción meteorológica para la hora seleccionada.
-  - Predicción por horas: Muestra un resumen las predicciones por cada hora, para el día seleccionado. Haciendo click en ella, nos mostrará el detalle en la banda superior.
-- Banda inferior: Muestra un listado con el resumen de las predicciones por día. La temperatura mínima y máxima son valores calculados a partir de los valores horarios de ese dia en concreto. Haciendo click en alguno de estos elementos, se mostrará el detalle de la predicción en la banda superior.
+Meteotest is a SPA (Single Page Application) that displays weather forecasts for three specific cities (London, Toronto, and Singapore).
+The interface features a header with the app's title and a language selector (English and Spanish) and a tabbed widget.
+Each tab corresponds to one of the cities. For each tab, there is a section with two bands:
 
-## Arquitectura
+- Upper band: Consists of two sections:
+  - Current Forecast: Shows the details of the weather forecast for the selected hour.
+  - Hourly Forecast: Displays a summary of the forecasts for each hour of the selected day. Clicking on it will show the details in the upper band.
+- Lower band: Displays a list with the summary of the daily forecasts. The minimum and maximum temperatures are calculated values based on the hourly values for that particular day. Clicking on any of these items will show the forecast details in the upper band.
 
-La arquitectura elegida es una adaptación de la arquitectura hexagonal al a programación funcional, donde la lógica de negocio queda totalmente aislada de la lógica presentacional y conseguimos mantener los principios SOLID. La carpeta `core` contiene la lógica de negocio.
+## Architecture
 
-- `domain`: Contiene las entidades de dominio de nuestra aplicación
-- `application`: Contiene los casos de uso
-- `insfrastructure`: Contiene el repositorio de la api y otros útiles como una clase de error que usaremos en este repositorio y el DTO que transforma los datos obtenidos por api a nuestra entidad de dominio
+The chosen architecture is an adaptation of the hexagonal architecture to functional programming, where business logic is completely isolated from presentation logic, and we maintain the SOLID principles. The `core` folder contains the business logic.
 
-## Gestión del estado
+- `domain`: Contains the domain entities of our application
+- `application`: Contains the use cases
+- `infrastructure`: Contains the API repository and other utilities such as an error class that we will use in this repository and the DTO that transforms the data obtained by the API into our domain entity
 
-Debido a que es una SPA y no tiene que compartir datos con otras secciones o páginas de la aplicación (en cuyo caso hubiera elegido Redux), se ha optado por usar la api de Context de React. Dejando toda la lógica presentacional dentro de un Provider. El consumo de esta lógica se ha delegado a un hook, que accede a todos los datos del contexto. De esta manera podemos aislar toda la lógica de los componentes.
+## State Management
+
+Given that it's a SPA and doesn't need to share data with other sections or pages of the application (in which case I would have chosen Redux), the React Context API has been used. All the presentational logic is enclosed within a Provider. The consumption of this logic has been delegated to a hook that accesses all the context data. This way, we can isolate all the logic from the components.
 
 ## UI
 
-Para la capa presentacional se ha seguido la metodología de componentes y contenedores, optado por un diseño atómico de componentes, de esta manera tendremos componentes totalmente reusables, con una mínima lógica y lo mas agnósticos posibles. Estos componentes se encuentran en la carpeta `components`. Por otro lado los contenedores son los que gestionarán toda la lógica.
+For the presentation layer, a methodology of components and containers has been followed, opting for an atomic design of components. This way, we have completely reusable components, with minimal logic and as agnostic as possible. These components are located in the `components` folder. On the other hand, containers manage all the logic.
 
-Para el estilado de los componentes se ha optado por StyledComponents debido a la flexibilidad para crear componentes semánticos que dependen de propiedades, y por la limpieza que aporta ya que nos permite separar el estilado de componentes de las vistas en sí. Además tiene otras ventajas como que añade automáticamente los prefijos específicos de cada navegador.
+For styling the components, StyledComponents was chosen due to its flexibility in creating semantic components that depend on properties, and for the cleanliness it brings as it allows us to separate the styling of components from the views themselves. It also has other advantages, such as automatically adding browser-specific prefixes.
 
-Para no alargar excesivamente la prueba he decidido no aplicar diseño "responsive" y encajar todo el widget en un contenedor de 800px de ancho.
+To not excessively extend the test, I decided not to apply "responsive" design and fit the entire widget into an 800px wide container.
 
-## Internacionalización
+## Internationalization
 
-Para dotar a la app de diferentes idiomas se ha optado por hacer uso de la librería `i18n`. Configurando los dos idiomas requeridos. Además también están internacionalizadas tanto las fechas como las temperaturas (celsius / fahrenheit).
+To provide the app with different languages, the `i18n` library was used, setting up the two required languages. Dates and temperatures (Celsius/Fahrenheit) are also internationalized.
 
-## Manejo de errores
+## Error Handling
 
-Se ha implementado el manejo de errores (en este caso de la petición a la api) mediante un componente de `<Alert/>` , que muestra un mensaje de error. Puede probarse arrancando la app sin conexión a internet.
+Error handling (in this case, from the API request) has been implemented through an `<Alert/>` component, which displays an error message. It can be tested by starting the app without an internet connection.
 
 ## Testing
 
-Se incluye un test unitario del componente de Tabs utilizando Jest y React Testing Library.
+A unit test of the Tabs component is included, using Jest and React Testing Library.
 
-## Otras consideraciones
+## Other Considerations
 
-Para probar el funcionamiento de la aplicación es necesario descargarse el repositorio en local e instalar las dependencias ejecutando el comando `npm i`. Además es necesario crear una fichero con el nombre `.env` donde setearemos una variable de entorno con la api key del servicio [openweathermap](https://openweathermap.org/forecast5) de esta manera `VITE_OPEN_WEATHER_API_KEY=aqui_la_api_key` (Si es necesario, puedo facilitaros la que yo he creado). Una vez hecho esto ya podemos arrancar la app ejecutando `npm run dev`
+To test the application's functionality, it's necessary to download the repository locally and install the dependencies by executing the command `npm i`. It's also necessary to create a file named `.env` where we will set an environment variable with the API key for the [openweathermap](https://openweathermap.org/forecast5) service like this `VITE_OPEN_WEATHER_API_KEY=your_api_key_here` (If needed, I can provide the one I've created). Once this is done, we can start the app by executing `npm run dev`.
